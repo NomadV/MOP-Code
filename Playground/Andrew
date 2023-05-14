@@ -1,0 +1,323 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-title\">Ideal Green Roof Locations: Melbourne</div>\n",
+    "\n",
+    "<div class=\"usecase-authors\"><b>Authored by: </b> Ryan Waites, Hannah Smith</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-duration\"><b>Duration:</b> 120 mins</div>\n",
+    "\n",
+    "<div class=\"usecase-level-skill\">\n",
+    "    <div class=\"usecase-level\"><b>Level: </b>Beginner</div>\n",
+    "    <div class=\"usecase-skill\"><b>Pre-requisite Skills: </b>Python</div>\n",
+    "</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-section-header\">Scenario</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**1. As a city planner, I want to identify the locations which could most benefit from retrofitting with a green roof.**\n",
+    "\n",
+    "**2. As a building manager or owner of a residence, I want to visualise the potential of retrofitting my building for energy efficiency and greening.**\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-section-header\">Learning objectives</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "At the end of this use case you will be able to:\n",
+    "\n",
+    "- work with spatial databases using Geopandas\n",
+    "\n",
+    "- visualise spatial data on an interactive map\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-section-header\">Why the interest in green roofs?</div>\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### **What is a green roof?**\n",
+    "\n",
+    "<fn id=\"fn-14\">Green roofs are rooftops systems with plants in a growing medium, which are usually irrigated in drier climates. They can be:</fn>\n",
+    "\n",
+    "- _Extensive_: growing in a shallower medium, generally low growing plants like succulents or grasses\n",
+    "- _Intensive_: growing in a deeper medium, with taller vegetation including shrubs or trees\n",
+    "- _Semi-intensive_: partway between\n",
+    "\n",
+    "In Melbourne's climate even extensive green roofs may need to be irrigated.\n",
+    "\n",
+    "##### **How is this relevant to Melbourne?**\n",
+    "\n",
+    "Roofs make up about 23% of the total space in the City of Melbourne <a href=\"#fn-1\">[1]</a>, and over 90% of rooftops which are suitable for extensive roofs are also suitable for intensive. Therefore, there is a significant potential for green roofs to contribute to the urban forest target the council has set for 2040 <a href=\"#fn-2\">[2]</a>.\n",
+    "\n",
+    "Building turnover in the centre of Melbourne is slow, therefore the best approach is to identify retrofitting opportunities in the suitable existing buildings <a href=\"#fn-2\">[2]</a>.\n",
+    "\n",
+    "Urban areas with an elevated temperature relative to the rural surroundings is known as the urban heat island (UHI) effect <a href=\"#fn-3\">[3]</a>. It can refer to both the urban surface temperatures on roads, footpaths, and building envelopes as well as the ambient temperature. There is evidence of the UHI in Melbourne with an average annual intensity of approximately 1.5 degrees Celsius <a href=\"#fn-4\">[4]</a>.\n",
+    "\n",
+    "The UHI threatens the economy by reducing productivity, increases the need for cooling and thus impacts energy consumption, and is associated with poorer air quality and a number of health risks <a href=\"#fn-5\">[5]</a>. In Melbourne, simulations of thermal environments for residential buildings indicate that doubling the amount of vegetation is estimated to reduce heat-related deaths by 5-28%. <a href=\"#fn-6\">[6]</a>.\n",
+    "\n",
+    "##### **What are the benefits of green roofs?**\n",
+    "\n",
+    "Green roofs and walls mitigate the UHI by providing shade which blocks solar radiation from reaching urban surfaces, and by the vegetation absorbing and dissipating the radiation. This provides energy savings to the building owner, as well as cooling and comfort to the building users. For private businesses, this can improve productivity due to the improved interior comfort, and due to the psychological benefits of viewing vegetation <a href=\"#fn-7\">[7]</a>.\n",
+    "\n",
+    "In Melbourne, extensive green roofs were shown to reduce building energy use by 28% in summer <a href=\"#fn-7\">[7]</a>. Urban vegetation also increases urban ecology and biodiversity and provides amenity to the people using the urban spaces <a href=\"#fn-8\">[8]</a>. Green roofs make buildings cooler in summer and warmer in winter, provide barriers against noise pollution by reflecting sound as well as produce oxygen whilst capturing CO2 and other pollutants <a href=\"#fn-9\">[9]</a>. Ideally, trees should be used in combination with grasses, shrubs and planters for the optimum cooling effect <a href=\"#fn-10\">[10]</a>, and it is more effective to use multiple UHI mitigation strategies at the same time (cool materials, green roofs, green walls, and urban greenery) <a href=\"#fn-4\">[4]</a>.\n",
+    "\n",
+    "In addition, green roofs are an effective and sustainable tool to assist with the management of stormwater quality and quantity. The rainwater is initially stored in the soil and then the vegetation, often reducing peak runoff and volume in contrast to conventional roofs. A study conducted in the highly urbanized city of Seoul, South Korea, found the green roof to have an average runoff retention ranging from 10% to 60% <a href=\"#fn-11\">[11]</a> whilst a study simulating Melbourne's rainfall patterns, commonly frequent and small, found they had the potential to retain up to 90% each rainfall <a href=\"#fn-12\">[12]</a>. These effects, in combination with the delaying of runoff, can greatly reduce the chances of flash flooding in highly urbanized areas and the load on urban drainage <a href=\"#fn-13\">[13]</a>.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-section-header\">Relevant datasets</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "##### **The Rooftop Project**\n",
+    "\n",
+    "This dataset uses a spatial multi-criteria analysis to classify buildings based on the possibility of adapting their rooftops for either intensive or extensive greenroofs. The buildings are located in the City of Melbourne.\n",
+    "\n",
+    "- [Rooftop datasets](https://data.melbourne.vic.gov.au/Environment/Rooftops-with-environmental-retrofitting-opportuni/3927-sgfc)\n",
+    "\n",
+    "****\n",
+    "\n",
+    "##### **Building Energy Consumption**\n",
+    "\n",
+    "This dataset outlines a model of energy consumption in megawatt hours in the City of Melbourne based on building attributes (age, floor area, etc) and is presented at property level scale. This model was developed by the CSIRO based on a baseline from 2011 to compare a potential reduction in energy consumption available in retrofitting is done. This retrofitting could be done demand-side (improving energy efficiency) or supply-side (by generating electricity on-site). The supply side considered roof size for placement of solar panels, but only considered 10% of that space to be potentially available for solar panels. The \"business as usual\" projections are property-level, but the retrofit scenario only is at block level due to privacy reasons.\n",
+    "\n",
+    "- [Property level energy consumption - business as usual](https://data.melbourne.vic.gov.au/Environment/Property-level-energy-consumption-modelled-on-buil/fyes-zqbt)\n",
+    "- [Block level energy consumption - model for 2026](https://data.melbourne.vic.gov.au/Environment/Block-level-energy-consumption-modelled-on-buildin/pyua-izk6)\n",
+    "\n",
+    "****\n",
+    "\n",
+    "##### **Urban Heat and Heat Vulnerability Index (HVI)**\n",
+    "\n",
+    "These datasets come from the Cooling and Greening Melbourne Interactive map made available by the state government. The urban heat dataset shows how many degrees Celsius the average temperature is above the baseline, when measuring within urban parts of a boundary area and using a non-urban baseline. The HVI refers to how vulnerable specific populations are to extreme heat events as indicated by heat exposure, sensitivity to heat, and adaptive capability.\n",
+    "\n",
+    "- [Access the Cooling and Greening Melbourne Interactive Map to download the data](https://www.planning.vic.gov.au/policy-and-strategy/planning-for-melbourne/plan-melbourne/cooling-greening-melbourne/cooling-and-greening-melbourne-interactive-map)\n",
+    "\n",
+    "****\n",
+    "\n",
+    "The rooftop and urban heat/HVI datasets are not accessible via the Socrata API, they need to be downloaded from the links above onto your local machine. Please note that the Urban Heat and HVI datasets are only downloadable over a mixed security connection which will be automatically blocked by any Chromium browser.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Working with the data\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import geopandas as gpd\n",
+    "from shapely.geometry import Polygon\n",
+    "from sklearn.preprocessing import LabelEncoder\n",
+    "import json\n",
+    "import requests\n",
+    "\n",
+    "# Visualisation\n",
+    "#import matplotlib.pylab as plt\n",
+    "#import folium\n",
+    "#from folium import plugins\n",
+    "#import seaborn as sns\n",
+    "#import branca.colormap as cm\n",
+    "\n",
+    "#%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div class=\"usecase-section-header\">Accessing and loading the datasets</div>\n",
+    "\n",
+    "**Loading the energy consumption datasets**\n",
+    "\n",
+    "The building energy consumption datasets are available by SODA API, available in the 'Export' tab at the website linked above. Since for this analysis the 2026 business as usual data will act as a baseline, it will be referred to as the baseline data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import the datasets from the API endpoint\n",
+    "\n",
+    "model_dataset = requests.get('https://data.melbourne.vic.gov.au/api/records/1.0/search/?dataset=property-level-energy-consumption-modelled-on-building-attributes-baseline-2011-&q=')\n",
+    "\n",
+    "model_df = gpd.GeoDataFrame(model_dataset)\n",
+    "\n",
+    "block = gpd.read_file('https://data.melbourne.vic.gov.au/api/v2/catalog/datasets/block-level-energy-consumption-modelled-on-building-attributes-2026-projection-b/exports/geojson?limit=-1&offset=0&timezone=UTC') \n",
+    "block = block.rename(columns={\"geometry\":\"the_geom\",\"num_b_prop\":\"property_id\",\"total\":\"total_2026\",\"resi\":\"floor_area\"})\n",
+    "baseline_df = block.loc[:,[\"the_geom\",\"property_id\",\"total_2026\",\"floor_area\"]]\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "When downloaded from the API endpoint, these two datasets have their shapefiles stored as nested lists within a dictionary. To manipulate these datasets in Geopandas, we will need to convert these entries into a polygon.\n",
+    "Geopandas geometry columns are typically named 'geometry', so we will also rename the column. This avoids having to specify the column name when passing the shapefiles to Geopandas methods."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Methods for preparing the energy consumption datasets\n",
+    "\n",
+    "def get_coords(row):\n",
+    "    \"\"\"\n",
+    "    Converts the geometry column entries of the datafile row into shapely polygons.\n",
+    "    row: a single row entry for a dataframe\n",
+    "    \"\"\"\n",
+    "\n",
+    "    row[\"geometry\"] = Polygon(row['geometry']['coordinates'][0][0])\n",
+    "\n",
+    "    return row\n",
+    "\n",
+    "\n",
+    "def prepare_dataset(dataframe, baseline=False):\n",
+    "    \"\"\"\n",
+    "    Converts the downloaded energy consumption dataset contained in 'dataframe' into a usable Geopandas format\n",
+    "    using the 4326 coordinate system.\n",
+    "\n",
+    "    Since we need different columns from each dataset, the bool 'baseline' will ensure the right columns are\n",
+    "    taken from each dataset.\n",
+    "\n",
+    "    dataframe: a Pandas dataframe\n",
+    "    baseline: a bool indicating if this is the baseline or the model data\n",
+    "    \"\"\"\n",
+    "\n",
+    "    # Rename the column to be recognisable to Geopandas\n",
+    "    new_dataframe = dataframe.rename(columns={\"the_geom\" : \"geometry\"})\n",
+    "\n",
+    "    # Apply the get_coords method to each row\n",
+    "    new_dataframe.apply(get_coords, axis=1)\n",
+    "\n",
+    "    # The dataset also needs to have object datatypes converted to numeric data\n",
+    "    if baseline is True:\n",
+    "        new_dataframe[\"total_2026\"] = pd.to_numeric(new_dataframe['total_2026'], errors = 'coerce')\n",
+    "        new_dataframe[\"floor_area\"] = pd.to_numeric(new_dataframe['floor_area'], errors = 'coerce')\n",
+    "    if baseline is False:\n",
+    "        new_dataframe[\"total\"] = pd.to_numeric(new_dataframe['total'], errors = 'coerce')\n",
+    "\n",
+    "    return gpd.GeoDataFrame(new_dataframe,geometry='geometry', crs=4326)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "KeyError",
+     "evalue": "'geometry'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/indexes/base.py\u001b[0m in \u001b[0;36mget_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3079\u001b[0m             \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3080\u001b[0;31m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_engine\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcasted_key\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3081\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mKeyError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32mpandas/_libs/index.pyx\u001b[0m in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mpandas/_libs/index.pyx\u001b[0m in \u001b[0;36mpandas._libs.index.IndexEngine.get_loc\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mpandas/_libs/index_class_helper.pxi\u001b[0m in \u001b[0;36mpandas._libs.index.Int64Engine._check_type\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;31mKeyError\u001b[0m: 'geometry'",
+      "\nThe above exception was the direct cause of the following exception:\n",
+      "\u001b[0;31mKeyError\u001b[0m                                  Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-23-74c6ee64e59f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# Preparing the energy consumption datasets\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 3\u001b[0;31m \u001b[0mmodel_gdf\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mprepare_dataset\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmodel_df\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      4\u001b[0m \u001b[0mbaseline_gdf\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mprepare_dataset\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mbaseline_df\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbaseline\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m<ipython-input-22-360009819c40>\u001b[0m in \u001b[0;36mprepare_dataset\u001b[0;34m(dataframe, baseline)\u001b[0m\n\u001b[1;32m     28\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     29\u001b[0m     \u001b[0;31m# Apply the get_coords method to each row\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 30\u001b[0;31m     \u001b[0mnew_dataframe\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mapply\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mget_coords\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0maxis\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     31\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     32\u001b[0m     \u001b[0;31m# The dataset also needs to have object datatypes converted to numeric data\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/frame.py\u001b[0m in \u001b[0;36mapply\u001b[0;34m(self, func, axis, raw, result_type, args, **kwds)\u001b[0m\n\u001b[1;32m   7763\u001b[0m             \u001b[0mkwds\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mkwds\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   7764\u001b[0m         )\n\u001b[0;32m-> 7765\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mop\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_result\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   7766\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   7767\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mapplymap\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfunc\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mna_action\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mOptional\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mstr\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m->\u001b[0m \u001b[0mDataFrame\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/apply.py\u001b[0m in \u001b[0;36mget_result\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    183\u001b[0m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mapply_raw\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    184\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 185\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mapply_standard\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    186\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    187\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mapply_empty_result\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/apply.py\u001b[0m in \u001b[0;36mapply_standard\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    274\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    275\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mapply_standard\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 276\u001b[0;31m         \u001b[0mresults\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mres_index\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mapply_series_generator\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    277\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    278\u001b[0m         \u001b[0;31m# wrap results\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/apply.py\u001b[0m in \u001b[0;36mapply_series_generator\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    288\u001b[0m             \u001b[0;32mfor\u001b[0m \u001b[0mi\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mv\u001b[0m \u001b[0;32min\u001b[0m \u001b[0menumerate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mseries_gen\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    289\u001b[0m                 \u001b[0;31m# ignore SettingWithCopy here in case the user mutates\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 290\u001b[0;31m                 \u001b[0mresults\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mv\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    291\u001b[0m                 \u001b[0;32mif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mresults\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mABCSeries\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    292\u001b[0m                     \u001b[0;31m# If we have a view on v, we need to make a copy because\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m<ipython-input-22-360009819c40>\u001b[0m in \u001b[0;36mget_coords\u001b[0;34m(row)\u001b[0m\n\u001b[1;32m      7\u001b[0m     \"\"\"\n\u001b[1;32m      8\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 9\u001b[0;31m     \u001b[0mrow\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m\"geometry\"\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mPolygon\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrow\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'geometry'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'coordinates'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     10\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     11\u001b[0m     \u001b[0;32mreturn\u001b[0m \u001b[0mrow\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/series.py\u001b[0m in \u001b[0;36m__getitem__\u001b[0;34m(self, key)\u001b[0m\n\u001b[1;32m    822\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    823\u001b[0m         \u001b[0;32melif\u001b[0m \u001b[0mkey_is_scalar\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 824\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_get_value\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    825\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    826\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mis_hashable\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/series.py\u001b[0m in \u001b[0;36m_get_value\u001b[0;34m(self, label, takeable)\u001b[0m\n\u001b[1;32m    930\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    931\u001b[0m         \u001b[0;31m# Similar to Index.get_value, but we do not fall back to positional\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 932\u001b[0;31m         \u001b[0mloc\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mindex\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlabel\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    933\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mindex\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_get_values_for_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mloc\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlabel\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    934\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/envs/RStudio/lib/python3.8/site-packages/pandas/core/indexes/base.py\u001b[0m in \u001b[0;36mget_loc\u001b[0;34m(self, key, method, tolerance)\u001b[0m\n\u001b[1;32m   3080\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_engine\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget_loc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcasted_key\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3081\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mKeyError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3082\u001b[0;31m                 \u001b[0;32mraise\u001b[0m \u001b[0mKeyError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkey\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0merr\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3083\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3084\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mtolerance\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mKeyError\u001b[0m: 'geometry'"
+     ]
+    }
+   ],
+   "source": [
+    "# Preparing the energy consumption datasets\n",
+    "\n",
+    "model_gdf = prepare_dataset(model_df,)\n",
+    "baseline_gdf = prepare_dataset(baseline_df, baseline=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.2"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "369f2c481f4da34e4445cda3fffd2e751bd1c4d706f27375911949ba6bb62e1c"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
