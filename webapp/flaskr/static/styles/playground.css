@@ -116,20 +116,13 @@ pre {
     .navbar-menu .is-active > .navbar-link {
         background-color: transparent;
     }
-    .dot {
-        height: 15px;
-        width: 15px;
-        border-radius: 50%;
-        display: inline-block;
+    .navbar-item.is-active {
+        background-color: #41f3a3 !important;
     }
-    a.dot.beginner {
-        background-color: #87ffc9;
+    .navbar-item .btn {
+        align-items: center;
+        border-width: 1px;
+        justify-content: center;
+        text-align: center;
     }
-    a.dot.Intermediate{
-        background-color: #4ffdaf;
-    }
-    a.dot.advanced{
-        background-color: #00ff8c;
-    }
-
 }  

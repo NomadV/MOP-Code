@@ -33,44 +33,46 @@
 
         <div id="navbar_menu" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item{% if index %} is-active{% endif %}" href="{{url_for('home.home')}}"
-                    target="_self">
-                    Home
-                </a>
-                <a class="navbar-item{% if about %} is-active{% endif %}" href="{{url_for('home.about')}}"
-                    target="_self">
-                    About
-                </a>
-                <a class="navbar-item{% if faq %} is-active{% endif %}" href="{{url_for('home.faq')}}"
-                    target="_self">
-                    FAQ
-                </a>
-                <a class="navbar-item{% if contact %} is-active{% endif %}" href="{{url_for('home.contact')}}"
-                    target="_self">
-                    Contact
-                </a>
-            </div>
-
-            <div class="navbar-end">
-                <a class="navbar-item" href="https://data.melbourne.vic.gov.au/" target="_blank">
-                    <img src="{{url_for('static', filename='City_Of_Melbourne_Logo.png')}}">
-                </a>
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a href="https://github.com/D2I-Melbourne/MOP" target="_blank" class="button">
-                            <span class="icon">
-                                <i class="fab fa-github"></i>
-                            </span>
-                            <span>GitHub</span>
-                        </a>
-                    </div>
+                <div class="button">
+                    <a class="navbar-item{% if index %} is-active{% endif %}" class="btn" href="{{url_for('home.home')}}"
+                        target="_self">
+                        Home
+                    </a>
+                    <a class="navbar-item{% if about %} is-active{% endif %}" class="btn"href="{{url_for('home.about')}}"
+                        target="_self">
+                        About
+                    </a>
+                    <a class="navbar-item{% if faq %} is-active{% endif %}" class="btn" href="{{url_for('home.faq')}}"
+                        target="_self">
+                        FAQ
+                    </a>
+                    <a class="navbar-item{% if contact %} is-active{% endif %}" class="btn" href="{{url_for('home.contact')}}"
+                        target="_self">
+                        Contact
+                    </a>
                 </div>
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a target="_blank">
-                            <img id='dt-btn' src="{{url_for('static',filename='moon_ico.png')}}"
-                            style="width: 30px; height: 60px; margin: 5px; filter: brightness(0) invert(1)">
-                        </a>
+
+                <div class="navbar-end">
+                    <a class="navbar-item" href="https://data.melbourne.vic.gov.au/" target="_blank">
+                        <img src="{{url_for('static', filename='City_Of_Melbourne_Logo.png')}}">
+                    </a>
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a href="https://github.com/D2I-Melbourne/MOP" target="_blank" class="button">
+                                <span class="icon">
+                                    <i class="fab fa-github"></i>
+                                </span>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a target="_blank">
+                                <img id='dt-btn' src="{{url_for('static',filename='moon_ico.png')}}"
+                                style="width: 30px; height: 60px; margin: 5px; filter: brightness(0) invert(1)">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
