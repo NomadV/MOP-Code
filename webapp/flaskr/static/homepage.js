@@ -1,5 +1,5 @@
 // Templates for each row of the tables
-var rowTemplateUseCase = "<tr class='row-bottom-border-usecase' style='color: var(--default-text-color);'><td>{{name}}</td><td class='level-col'>{{difficulty}}</td><td>{{link}}</td></tr>";
+var rowTemplateUseCase = "<tr class='row-bottom-border-usecase' style='color: var(--default-text-color);'><td>{{name}}</td><td>{{notebook}}</td><td class='level-col'>{{difficulty}}</td><td>{{link}}</td></tr>";
 var rowTemplateDataset = "<tr class='row-bottom-border-dataset' style='color: var(--default-text-color);'><td>{{name}}</td><td>{{difficulty}}</td></tr>";
 
 // Values for the use-case table
@@ -41,7 +41,8 @@ function createNewRowUsecase(name, difficulty, link) {
     else{
         return rowTemplateUseCase.replace("{{name}}", "<div class='usecase-col no-underline-link'><a href='/use-cases/" + link + "'>" + name + "</a></div>")
                             .replace("{{difficulty}}", "<div class='" + difficulty.toLowerCase() + " bubble'>" + difficulty + "</div>")
-                            .replace("{{link}}","<div class='link-col no-underline-link'><a href='/use-cases/" + link + "'>➤</a></div>");
+                            .replace("{{link}}","<div class='link-col no-underline-link'><a href='/use-cases/" + link + "'>➤</a></div>")
+                            .replace("{{notebook}}", "<div class=' no-underline-link'><a  href='/use-cases/notebook/" + link + ".ipynb' download> hello</a> </div>");
     }
 }
 window.addEventListener("resize", function() {
